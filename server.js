@@ -5,7 +5,8 @@
 var express    = require('express')
   , app        = express()
   , bodyParser = require('body-parser')
-  , mongoose   = require('mongoose');
+  , mongoose   = require('mongoose')
+  , Bear       = require('./app/models/bear');
 
 mongoose.connect('mongodb://localhost:27017/nodeapi', {native_parser:true});
 
