@@ -49,6 +49,7 @@ router.route('/bears')
     });
   });
 
+// routes that end in /bears/:bear_id
 router.route('/bears/:bear_id')
   .get(function(req, res) {
     Bear.findById(req.params.bear_id, function(err, bear) {
@@ -56,7 +57,30 @@ router.route('/bears/:bear_id')
         res.send(err);
       res.json(bear);
     });
+  })
+  .put(function(req, res) {
+    Bear.findById(req.params.bear_id, function(err, bear) {
+      if (err)
+        res.send(err);
+
+      bear.name = req.body.name;
+      bear.save(function(err, bear) {
+        if (err)
+          res.send(err);
+        res.json({ message: 'Successfully updated!' });
+      });
+    });
+  })
+  .delete(function(req, res) {
+    Bear.remove({
+      _id : req.params.bear_id
+    }, function(err, bear) {
+      if (err)
+        res.send(err);
+      res.json({ message: 'Successfuly deleted!' });
+    });
   });
+
 
 // REGISTER ROUTES -------------------------------------------------------------
 // all routes prefixed with /api
