@@ -18,12 +18,45 @@ var port = process.env.PORT || 8080; // define port to use
 // routes will be defined using an instance of the express router
 var router = express.Router();
 
+// middleware to use for all requests
+router.use(function(req, res, next) {
+  console.log('Something is happening.');
+  next();
+});
+
 // test router
 router.get('/', function(req, res) {
   res.json({ message: 'Hooray! Welcome to my API!'});
 });
 
-// add additional routes here
+// routes that end in /bears
+router.route('/bears')
+  .post(function(req, res) {
+    var bear = new Bear();
+    bear.name = req.body.name;
+
+    bear.save(function(err) {
+      if (err)
+        res.send(err);
+      res.json({ message: 'Bear created!' });
+    });
+  })
+  .get(function(req, res) {
+    Bear.find(function(err, bears) {
+      if (err)
+        res.send(err);
+      res.json(bears);
+    });
+  });
+
+router.route('/bears/:bear_id')
+  .get(function(req, res) {
+    Bear.findById(req.params.bear_id, function(err, bear) {
+      if (err)
+        res.send(err);
+      res.json(bear);
+    });
+  });
 
 // REGISTER ROUTES -------------------------------------------------------------
 // all routes prefixed with /api
